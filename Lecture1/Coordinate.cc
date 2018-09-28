@@ -1,5 +1,9 @@
 #include <iostream>
 using std::cout;
+using std::ostream;
+
+#include <fstream>
+using std::ofstream;
 
 #include <vector>
 using std::vector;
@@ -25,11 +29,11 @@ public:
         : x(0), y(0) {
     }*/
     
-    int getX() {
+    int getX() const {
         return x;
     }
 
-    int getY() {
+    int getY() const {
         return y;
     }
     
@@ -41,7 +45,7 @@ public:
         y = yIn;
     }
     
-    bool operator==(Coordinate other) {
+    bool operator==(const Coordinate & other) const {
         return (x == other.x && y == other.y);
     }
     
@@ -57,9 +61,18 @@ public:
     
 };
 
+ostream & operator<<(ostream & o, const Coordinate & rhs) {
+    o << rhs.getX() << "," << rhs.getY();
+    return o;
+}
+
+bool operator==(const Coordinate & a, const Coordinate & b) {
+    return (a.getX() == b.getX() );
+}
+
 class Journey {
     
-protected:
+private:
     
     Coordinate start;
     Coordinate end;
@@ -73,7 +86,19 @@ public:
           end(endIn),
           origin(0,0) {
     }
+    
+    Coordinate & getStart() {
+        return start;
+    }
 };
+
+void setXToZero(Coordinate & in) {
+    in.setX(0);
+}
+
+void printX(const Coordinate & a) {
+    cout << a.getX() << "\n";
+}
 
 int main() {
     Coordinate a(3,2);
@@ -81,33 +106,17 @@ int main() {
     cout << a.getX() << "\n";
     cout << a.getY() << "\n";
     
-    Coordinate b = a;
-    cout << b.getX() << "\n";
-    cout << b.getY() << "\n";
-    
-    a.setX(9001);
-    
     cout << a.getX() << "\n";
-    cout << b.getX() << "\n";
+    cout << a.getY() << "\n";    
     
-    vector<Coordinate> coords;
-    coords.push_back(Coordinate(4,4));
+    Journey j(a,Coordinate(10,10));
     
-    Journey someJourney(a,b);
+    Coordinate startsAt = j.getStart();    
+    printX(startsAt);
 
-    Coordinate f(1,2);
-    Coordinate g(1,2);
+    cout << a << "\n";
     
-    if (f == g) {
-        cout << "Java-style equals works here too\n";
-    }
-    
-    Coordinate h = f + g;
-    
-    if (f - g) {
-        // something silly
-    }
-    return 0;
-}
-
+    ofstream writer("written.txt");
+    writer << a << "\n";
+};
 
